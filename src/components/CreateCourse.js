@@ -35,6 +35,8 @@ class CreateCourse extends Component {
       };
 
       const valDiv = document.querySelector(".validation--errors");
+      const errorList = valDiv.querySelector("ul");
+      errorList.innerHTML = "";
       axios
         .post(url, body, { auth })
         .then((res) => {
@@ -43,7 +45,7 @@ class CreateCourse extends Component {
         })
         .catch((err) => {
           valDiv.style.display = "block";
-          const errorList = valDiv.querySelector("ul");
+
           const errors = err.response.data.errors;
           if (errors) {
             errors.forEach((error, i) => {
