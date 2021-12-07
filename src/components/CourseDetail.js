@@ -6,13 +6,13 @@ class CourseDetail extends Component {
   state = {
     courses: [],
     course: {},
-    owner: "",
   };
 
   componentDidMount() {
     this.getCourses();
   }
 
+  //gets all courses and isolates current course data
   getCourses() {
     axios.get(`http://localhost:5000/api/courses`).then((res) => {
       this.setState({ courses: res.data });
@@ -35,7 +35,13 @@ class CourseDetail extends Component {
     if (this.state.course.userId === this.props.user.id) {
       const id = this.state.course.id;
       const url = `http://localhost:5000/api/courses/${id}`;
-      axios.delete(url, { auth: creds }).then((res) => console.log(res));
+      axios.delete(url, { auth: creds }).then((res) => {
+        if (res.status === 204) {
+          alert("Course successfully deleted.");
+        } else {
+          alert(`Man down!  Course was not deleted.  Error: ${res.status}`);
+        }
+      });
     } else {
       alert("You are not authorized to delete this course.");
     }
@@ -97,7 +103,7 @@ class CourseDetail extends Component {
                 <div>
                   <h3 className="course--detail--title">Course</h3>
                   <h4 className="course--name">{course.title}</h4>
-                  <p>By {course.userId}</p>
+                  <p>By {course.user.firstName + " " + course.user.lastName}</p>
                   {description.map((item, i) => (
                     <p key={i}>{item}</p>
                   ))}

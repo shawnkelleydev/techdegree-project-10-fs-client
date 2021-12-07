@@ -28,28 +28,49 @@ class App extends Component {
 
   handleCreateCourse(e) {
     e.preventDefault();
-    const title = e.target.querySelector("#courseTitle").value;
-    const description = e.target.querySelector("#courseDescription").value;
-    const estimatedTime = e.target.querySelector("#estimatedTime").value;
-    const materialsNeeded = e.target.querySelector("#materialsNeeded").value;
-    const userId = this.state.user.id;
-    const url = "http://localhost:5000/api/courses";
-    const username = this.state.user.emailAddress;
-    const password = this.state.password;
-    console.log(username, password);
-    const body = {
-      title,
-      description,
-      estimatedTime,
-      materialsNeeded,
-      userId,
-    };
-    const auth = {
-      username,
-      password,
-    };
+    if (this.state.user.id) {
+      const title = e.target.querySelector("#courseTitle").value;
+      const description = e.target.querySelector("#courseDescription").value;
+      const estimatedTime = e.target.querySelector("#estimatedTime").value;
+      const materialsNeeded = e.target.querySelector("#materialsNeeded").value;
+      const userId = this.state.user.id;
+      const url = "http://localhost:5000/api/courses";
+      const username = this.state.user.emailAddress;
+      const password = this.state.password;
+      const body = {
+        title,
+        description,
+        estimatedTime,
+        materialsNeeded,
+        userId,
+      };
+      const auth = {
+        username,
+        password,
+      };
 
-    axios.post(url, body, { auth }).then((res) => console.log(res));
+      const valDiv = document.querySelector(".validation--errors");
+
+      axios
+        .post(url, body, { auth })
+        .then((res) => {
+          alert("Course successfully created!");
+          valDiv.style.display = "none";
+        })
+        .catch((err) => {
+          valDiv.style.display = "block";
+          const errors = err.response.data.errors;
+          errors.forEach((error, i) => {
+            const errorList = valDiv.querySelector("ul");
+            errorList.insertAdjacentHTML(
+              "beforeend",
+              `<li key=${i}>${error}</li>`
+            );
+          });
+        });
+    } else {
+      alert("Please log in to add courses.");
+    }
   }
 
   handleNewUser(e) {

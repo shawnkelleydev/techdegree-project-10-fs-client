@@ -141,6 +141,7 @@ header nav a:hover {
 }
 
 .validation--errors {
+  display: none;
   background: #e9e5f0;
   padding: 1rem;
   border-radius: 0.5rem;

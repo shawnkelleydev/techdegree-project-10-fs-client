@@ -5,42 +5,62 @@ import axios from "axios";
 class UpdateCourse extends Component {
   state = {
     courses: [],
+    course: {},
   };
 
+  //get courses / current course on component mount
   componentDidMount() {
     this.getCourses();
   }
 
   getCourses() {
     axios.get(`http://localhost:5000/api/courses`).then((res) => {
+      //set all courses in state
       this.setState({ courses: res.data });
+      //set current course in state
+      let courseId = window.location.href.split("/").splice(-2)[0];
+      courseId = parseInt(courseId);
+      const course = this.state.courses.filter(
+        (course) => course.id === courseId
+      )[0];
+      this.setState({ course });
     });
   }
 
+  //update if user match
   handleUpdate(e) {
     e.preventDefault();
-    //get course id from url
-    let courseId = window.location.href.split("/").splice(-2)[0];
-    courseId = parseInt(courseId);
-    const course = this.state.courses.filter(
-      (course) => course.id === courseId
-    )[0];
-    //set url
-    const url = `http://localhost:5000/api/courses/${courseId}`;
-    //assemble body
-    const body = {
-      title: e.target.querySelector("#courseTitle").value,
-      description: e.target.querySelector("#courseDescription").value,
-      estimatedTime: e.target.querySelector("#estimatedTime").value,
-      materialsNeeded: e.target.querySelector("#materialsNeeded").value,
-    };
-    //auth
-    const auth = {
-      username: this.props.user.emailAddress,
-      password: this.props.password,
-    };
-    //place request
-    axios.put(url, body, { auth });
+    //get course id form state
+    const userId = this.state.course.userId;
+    const courseId = this.state.course.id;
+    //compares current user from global state to current course information
+    if (userId === this.props.user.id) {
+      //set url
+      const url = `http://localhost:5000/api/courses/${courseId}`;
+      // assemble body
+      const body = {
+        title: e.target.querySelector("#courseTitle").value,
+        description: e.target.querySelector("#courseDescription").value,
+        estimatedTime: e.target.querySelector("#estimatedTime").value,
+        materialsNeeded: e.target.querySelector("#materialsNeeded").value,
+      };
+      //auth
+      const auth = {
+        username: this.props.user.emailAddress,
+        password: this.props.password,
+      };
+
+      //place request
+      axios.put(url, body, { auth }).then((res) => {
+        if (res.status === 204) {
+          alert("Successfully updated course.");
+        } else {
+          alert(`Man down!  Course did not update.  Error: ${res.status}`);
+        }
+      });
+    } else {
+      alert("You are not authorized to edit this course.");
+    }
   }
 
   render() {
@@ -50,6 +70,7 @@ class UpdateCourse extends Component {
     const course = this.state.courses.filter(
       (course) => course.id === courseId
     )[0];
+
     if (course) {
       return (
         <main>

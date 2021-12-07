@@ -1,16 +1,13 @@
 import { Link } from "react-router-dom";
 
 const CreateCourse = (props) => {
-  console.log(props.user);
   return (
     <main>
       <div className="wrap">
         <h2>Create Course</h2>
         <div className="validation--errors">
           <h3>Validation Errors</h3>
-          <ul>
-            <li>errors go here</li>
-          </ul>
+          <ul></ul>
         </div>
         <form onSubmit={props.submit}>
           <div className="main--flex">
