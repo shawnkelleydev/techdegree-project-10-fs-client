@@ -17,6 +17,8 @@ class App extends Component {
   state = {
     user: {},
     password: "",
+    signOut: () => this.signOut(),
+    signIn: () => this.signIn(),
   };
 
   /*
@@ -25,56 +27,30 @@ class App extends Component {
   their own api calls / state.
   
   */
-
-  handleCreateCourse(e) {
-    e.preventDefault();
-    if (this.state.user.id) {
-      const title = e.target.querySelector("#courseTitle").value;
-      const description = e.target.querySelector("#courseDescription").value;
-      const estimatedTime = e.target.querySelector("#estimatedTime").value;
-      const materialsNeeded = e.target.querySelector("#materialsNeeded").value;
-      const userId = this.state.user.id;
-      const url = "http://localhost:5000/api/courses";
-      const username = this.state.user.emailAddress;
-      const password = this.state.password;
-      const body = {
-        title,
-        description,
-        estimatedTime,
-        materialsNeeded,
-        userId,
-      };
+  componentDidMount() {
+    const username = localStorage.getItem("username");
+    const password = localStorage.getItem("password");
+    if (username && password) {
       const auth = {
         username,
         password,
       };
-
-      const valDiv = document.querySelector(".validation--errors");
-
+      const url = "http://localhost:5000/api/users";
       axios
-        .post(url, body, { auth })
+        .get(url, { auth })
         .then((res) => {
-          alert("Course successfully created!");
-          valDiv.style.display = "none";
+          this.setState({ user: res.data.user });
+          this.setState({ password });
         })
         .catch((err) => {
-          valDiv.style.display = "block";
-          const errors = err.response.data.errors;
-          errors.forEach((error, i) => {
-            const errorList = valDiv.querySelector("ul");
-            errorList.insertAdjacentHTML(
-              "beforeend",
-              `<li key=${i}>${error}</li>`
-            );
-          });
+          alert(err.response.data.message);
         });
-    } else {
-      alert("Please log in to add courses.");
     }
   }
 
   handleNewUser(e) {
     e.preventDefault();
+    let success = false;
     const firstName = e.target.querySelector("#firstName").value;
     const lastName = e.target.querySelector("#lastName").value;
     const emailAddress = e.target.querySelector("#emailAddress").value;
@@ -86,13 +62,30 @@ class App extends Component {
       password,
     };
     const url = "http://localhost:5000/api/users";
-    axios.post(url, data).then((res) => console.log(res));
+    const valDiv = document.querySelector(".validation--errors");
+    const valList = valDiv.querySelector("ul");
+    valList.innerHTML = "";
+    axios
+      .post(url, data)
+      .then((res) => {
+        valDiv.style.display = "none";
+        this.setState({ user: data, password });
+        success = true;
+      })
+      .catch((err) => {
+        valDiv.style.display = "block";
+
+        const errors = err.response.data.errors;
+        errors.forEach((error, i) => {
+          valList.insertAdjacentHTML("beforeend", `<li key=${i}>${error}</li>`);
+        });
+      });
+    return success;
   }
 
-  async handleSignIn(e) {
-    e.preventDefault();
-    const emailField = e.target.querySelector("#emailAddress");
-    const passwordField = e.target.querySelector("#password");
+  signIn() {
+    const emailField = document.querySelector("#emailAddress");
+    const passwordField = document.querySelector("#password");
     const email = emailField.value;
     const password = passwordField.value;
     this.setState({ password });
@@ -100,34 +93,39 @@ class App extends Component {
       username: email,
       password,
     };
-    // emailField.value = "";
-    // passwordField.value = "";
+    emailField.value = "";
+    passwordField.value = "";
     const url = "http://localhost:5000/api/users";
-    axios.get(url, { auth }).then((res) => {
-      this.setState({ user: res.data.user });
-    });
-    // this.setState({
-    //   username: res.data.user.emailAddress,
-    //   password: res.data.user. }));
+    axios
+      .get(url, { auth })
+      .then((res) => {
+        this.setState({ user: res.data.user });
+        localStorage.setItem("username", email);
+        localStorage.setItem("password", password);
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   }
 
-  handleSignOut(e) {
-    e.preventDefault();
+  signOut() {
     this.setState({ user: {} });
+    localStorage.clear();
   }
 
   render() {
     return (
       <div className="App">
-        <Header />
+        <Header user={this.state.user.firstName} />
         <Routes>
-          <Route path="/" element={<Courses />} />
+          <Route path="/" element={<Courses user={this.state.user} />} />
           <Route
             path="/courses/create"
             element={
               <CreateCourse
                 submit={(e) => this.handleCreateCourse(e)}
                 user={this.state.user}
+                password={this.state.password}
               />
             }
           />
@@ -153,9 +151,9 @@ class App extends Component {
             path="signin"
             element={
               <UserSignIn
-                submit={(e) => this.handleSignIn(e)}
+                submit={this.state.signIn}
                 user={this.state.user}
-                signout={(e) => this.handleSignOut(e)}
+                signout={this.state.signOut}
               />
             }
           />
@@ -163,7 +161,10 @@ class App extends Component {
             path="signup"
             element={<UserSignUp submit={(e) => this.handleNewUser(e)} />}
           />
-          <Route path="signout" element={<UserSignOut />} />
+          <Route
+            path="signout"
+            element={<UserSignOut signOut={this.state.signOut} />}
+          />
         </Routes>
       </div>
     );

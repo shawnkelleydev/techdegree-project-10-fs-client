@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const UserSignIn = (props) => {
   const user = props.user;
-  console.log(user.id);
   if (!user.id) {
     return (
       <main>
         <div className="form--centered">
           <h2>Sign In</h2>
-          <form onSubmit={props.submit}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              props.submit();
+            }}
+          >
             <label htmlFor="emailAddress">Email Address</label>
             <input id="emailAddress" name="emailAddress" type="email" />
             <label htmlFor="password">Password</label>
@@ -31,14 +35,18 @@ const UserSignIn = (props) => {
     );
   } else {
     return (
-      <main>
-        <div className="form--centered">
-          <h2>Welcome back, {user.firstName}!</h2>
-          <button className="button" onClick={props.signout}>
-            Sign Out
-          </button>
-        </div>
-      </main>
+      <Navigate to="/" />
+      // <main>
+      //   <div className="form--centered">
+      //     <h2>Welcome back, {user.firstName}!</h2>
+      //     <Link to="/">
+      //       <button className="button">See Courses</button>
+      //     </Link>
+      //     <button className="button" onClick={props.signout}>
+      //       Sign Out
+      //     </button>
+      //   </div>
+      // </main>
     );
   }
 };
