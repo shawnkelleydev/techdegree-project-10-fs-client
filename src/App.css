@@ -92,6 +92,7 @@ header nav a:hover {
 
 .course--module:hover {
   background: var(--hover);
+  color: white;
 }
 
 .course--label {
@@ -198,7 +199,7 @@ input,
 textarea {
   display: block;
   width: 100%;
-  color: var(--blue);
+  color: black;
   border-radius: 0.5rem;
   border: 1px solid #787c9b;
   padding: 0.5rem;
