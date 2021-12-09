@@ -12,6 +12,7 @@ import CourseDetail from "./CourseDetail";
 import UserSignIn from "./UserSignIn";
 import UserSignUp from "./UserSignUp";
 import UserSignOut from "./UserSignOut";
+import PrivateRoute from "./PrivateRoute";
 
 class App extends Component {
   state = {
@@ -119,34 +120,37 @@ class App extends Component {
         <Header user={this.state.user.firstName} />
         <Routes>
           <Route path="/" element={<Courses user={this.state.user} />} />
-          <Route
-            path="/courses/create"
-            element={
-              <CreateCourse
-                submit={(e) => this.handleCreateCourse(e)}
-                user={this.state.user}
-                password={this.state.password}
-              />
-            }
-          />
-          <Route
-            path="/courses/:id/update"
-            element={
-              <UpdateCourse
-                user={this.state.user}
-                password={this.state.password}
-              />
-            }
-          />
-          <Route
-            path="/courses/:id"
-            element={
-              <CourseDetail
-                user={this.state.user}
-                password={this.state.password}
-              />
-            }
-          />
+          <Route path="courses">
+            <Route
+              path=":id"
+              element={
+                <CourseDetail
+                  user={this.state.user}
+                  password={this.state.password}
+                />
+              }
+            />
+            <Route
+              path=":id/update"
+              element={
+                <PrivateRoute
+                  user={this.state.user}
+                  password={this.state.password}
+                  action="update"
+                />
+              }
+            />
+            <Route
+              path="create"
+              element={
+                <PrivateRoute
+                  user={this.state.user}
+                  password={this.state.password}
+                  action="create"
+                />
+              }
+            />
+          </Route>
           <Route
             path="signin"
             element={

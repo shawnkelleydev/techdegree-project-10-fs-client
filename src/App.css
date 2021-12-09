@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+:root {
+  --blue: #000f93;
+  --gray: rgb(215, 215, 254);
+  --hover: rgb(0, 68, 255);
+}
+
 html {
   font-size: 1.25em;
 }
@@ -26,7 +32,7 @@ p {
 }
 
 a {
-  color: #939;
+  color: var(--blue);
   text-decoration: none;
 }
 
@@ -37,7 +43,7 @@ a {
 }
 
 header {
-  background: #57496e;
+  background: var(--blue);
   color: #fff;
   padding: 1rem 0;
   margin-bottom: 2rem;
@@ -59,7 +65,7 @@ header li {
 }
 
 header nav a {
-  color: #dbd;
+  color: var(--gray);
 }
 
 header nav a:hover {
@@ -77,11 +83,15 @@ header nav a:hover {
 }
 
 .course--module {
-  background: #7c689b;
+  background: #000f93;
   border-radius: 0.5rem;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   display: block;
+}
+
+.course--module:hover {
+  background: var(--hover);
 }
 
 .course--label {
@@ -98,8 +108,8 @@ header nav a:hover {
 }
 
 .course--add--module {
-  background: #ddd9e4;
-  color: #57496e;
+  background: var(--gray);
+  color: var(--blue);
   font-weight: 300;
   font-size: 1.25rem;
 }
@@ -108,7 +118,7 @@ header nav a:hover {
   width: 20px;
   height: auto;
   margin-right: 5px;
-  fill: #57496e;
+  fill: var(--blue);
 }
 
 .course--detail--title {
@@ -125,7 +135,7 @@ header nav a:hover {
   font-size: 2rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
-  color: #47395e;
+  color: var(--blue);
 }
 
 .course--detail--list {
@@ -135,14 +145,14 @@ header nav a:hover {
 }
 
 .actions--bar {
-  background: #e9e5f0;
+  background: var(--gray);
   padding: 1rem 0;
   margin: -2rem 0 2rem;
 }
 
 .validation--errors {
   display: none;
-  background: #e9e5f0;
+  background: var(--gray);
   padding: 1rem;
   border-radius: 0.5rem;
   margin-bottom: 2.5rem;
@@ -188,9 +198,9 @@ input,
 textarea {
   display: block;
   width: 100%;
-  color: #332a40;
+  color: var(--blue);
   border-radius: 0.5rem;
-  border: 1px solid #8c789b;
+  border: 1px solid #787c9b;
   padding: 0.5rem;
   margin-bottom: 1rem;
   font-family: "Work Sans", sans-serif;
@@ -202,7 +212,7 @@ textarea {
 }
 
 .button {
-  background: #7c689b;
+  background: var(--blue);
   color: #fff;
   font-size: 1rem;
   padding: 0.75rem 1.5rem;
@@ -221,20 +231,20 @@ textarea {
 }
 
 .button:not(.button-secondary):hover {
-  background: #63537d;
+  background: var(--hover);
   cursor: pointer;
 }
 
 .button-secondary {
-  color: #7c689b;
+  color: var(--blue);
   background: none;
-  box-shadow: 0 0 0 2px #7c689b inset;
+  box-shadow: 0 0 0 2px var(--blue) inset;
   transition: box-shadow 0.2s, color 0.2s;
 }
 
 .button-secondary:hover {
-  color: #63537d;
-  box-shadow: 0 0 0 2px #63537d inset;
+  color: var(--hover);
+  box-shadow: 0 0 0 2px var(--hover) inset;
   cursor: pointer;
 }
 
@@ -244,7 +254,7 @@ button:focus,
 textarea:focus {
   border: none;
   border-radius: 0;
-  outline: 2px solid #332a40;
+  outline: 2px solid var(--blue);
 }
 
 @media screen and (min-width: 600px) {
