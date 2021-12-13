@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Link, Navigate } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 class CourseDetail extends Component {
   state = {
@@ -59,22 +60,8 @@ class CourseDetail extends Component {
         const courseId = course.id;
         //handle materials
         let materials = course.materialsNeeded;
-        if (materials) {
-          if (materials.includes("*")) {
-            materials = materials.split("*").filter((item) => item !== "");
-          } else if (materials.includes(",")) {
-            materials = materials.split(",").filter((item) => item !== "");
-          } else if (materials.includes("\n")) {
-            materials = materials.split("\n").filter((item) => item !== "");
-          } else {
-            materials = null;
-          }
-        }
         //handle description
         let description = course.description;
-        description = description
-          .split("\n")
-          .filter((item) => item !== " " && item !== "");
 
         return (
           <main>
@@ -114,9 +101,10 @@ class CourseDetail extends Component {
                     <p>
                       By {course.user.firstName + " " + course.user.lastName}
                     </p>
-                    {description.map((item, i) => (
+                    <ReactMarkdown children={description} />
+                    {/* {description.map((item, i) => (
                       <p key={i}>{item}</p>
-                    ))}
+                    ))} */}
                   </div>
                   <div>
                     <h3 className="course--detail--title">Estimated Time</h3>
@@ -124,13 +112,7 @@ class CourseDetail extends Component {
                       {course.estimatedTime ? course.estimatedTime : "none"}
                     </p>
                     <h3 className="course--detail--title">Materials Needed</h3>
-                    <ul className="course--detail--list">
-                      {materials ? (
-                        materials.map((item, i) => <li key={i}>{item}</li>)
-                      ) : (
-                        <li>no required materials</li>
-                      )}
-                    </ul>
+                    <ReactMarkdown children={materials} />
                   </div>
                 </div>
               </form>

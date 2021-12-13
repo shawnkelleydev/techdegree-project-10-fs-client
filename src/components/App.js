@@ -6,14 +6,14 @@ import "../App.css";
 //components
 import Header from "./Header";
 import Courses from "./Courses";
-// import CreateCourse from "./CreateCourse";
-// import UpdateCourse from "./UpdateCourse";
 import CourseDetail from "./CourseDetail";
 import UserSignIn from "./UserSignIn";
 import UserSignUp from "./UserSignUp";
 import UserSignOut from "./UserSignOut";
 import PrivateRoute from "./PrivateRoute";
 import NoRoute from "./NoRoute";
+// import CreateCourse from "./CreateCourse";
+// import UpdateCourse from "./UpdateCourse";
 
 class App extends Component {
   state = {
@@ -111,7 +111,7 @@ class App extends Component {
   }
 
   signOut() {
-    this.setState({ user: {} });
+    this.setState({ user: {}, password: "" });
     localStorage.clear();
   }
 

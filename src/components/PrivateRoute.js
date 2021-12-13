@@ -2,8 +2,9 @@ import CreateCourse from "./CreateCourse";
 import UpdateCourse from "./UpdateCourse";
 import { Navigate } from "react-router-dom";
 
+//PrivateRoute handles rendering of authenticated components
+
 const PrivateRoute = (props) => {
-  console.log("private", props.user.id);
   if (props.user.id) {
     if (props.action === "create") {
       return <CreateCourse user={props.user} password={props.password} />;
@@ -11,7 +12,7 @@ const PrivateRoute = (props) => {
       return <UpdateCourse user={props.user} password={props.password} />;
     }
   } else {
-    return <Navigate to="/signin" replace={true} />;
+    return <Navigate to="/signin" />;
   }
 };
 
